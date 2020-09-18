@@ -1,49 +1,37 @@
-require('./config/config');
-const express = require('express')
-const bodyParser = require('body-parser')
+require("./config/config");
+const express = require("express");
+const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
 
-const app = express()
+const app = express();
 
 // parse application/x-www-form-urlencoded
 // app.use expresa un middleware
-app.use(bodyParser.urlencoded({ extended: false }))
- 
+app.use(bodyParser.urlencoded({ extended: false }));
+
 // parse application/json
-app.use(bodyParser.json())
+app.use(bodyParser.json());
 
+// usamos rutas de usuario
+app.use(require('./routes/usuario'))
 
- 
-app.get('/usuarios', function (req, res) {
-  res.json('get usuarios')
-})
+mongoose.connect(
+  process.env.DB,
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+    useCreateIndex: true,
+  },
+  (err, res) => {
+    if (err) throw err;
 
-app.post('/usuarios', function (req, res) {
+    console.log("Base de datos ONLINE");
+  }
+);
 
-    let body = req.body;
-
-    if (body.nombre === undefined) {
-        res.status(400).json({
-            ok: false,
-            mensaje: 'El nombre es necesario'
-        })
-    }else {
-        res.json({
-            persona: body
-        })
-    }
-})
-
-app.put('/usuarios/:id', function (req, res) {
-    let id = req.params.id;
-    res.json({
-        id
-    });
-})
-
-app.delete('/usuarios', function (req, res) {
-    res.json('delete usuarios')
-})
- 
 app.listen(process.env.PORT, () => {
-    console.log('Escuchando puerto', process.env.PORT);
-})
+  console.log("Escuchando puerto", process.env.PORT);
+});
+
+console.log(process.env.DB);
