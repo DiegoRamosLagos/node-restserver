@@ -12,8 +12,10 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // parse application/json
 app.use(bodyParser.json());
 
-// usamos rutas de usuario
-app.use(require('./routes/usuario'))
+// configuración global de rutas
+app.use(require('./routes/index'))
+
+// LOS app.use SON MIDDLEWARESS
 
 mongoose.connect(
   process.env.DB,
